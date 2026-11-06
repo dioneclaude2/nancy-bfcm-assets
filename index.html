@@ -52,7 +52,7 @@ for(const [g,desc] of groups){
     const gr=s.querySelector('.grid');
     for(const it of x.items){const f=document.createElement('figure');const fn=it.f.split('/').pop();
       f.innerHTML=`<img loading="lazy" decoding="async" data-p="${it.t||it.f}" onerror="imgFail(this)" src="${CDN+(it.t||it.f)}" alt="${x.name}, ${it.label}"><figcaption><span>${it.label}</span><a href="${CDN+it.f}" download="${fn}">Download</a></figcaption>`;
-      f.querySelector('img').onclick=()=>{dimg.dataset.p=it.f; delete dimg.dataset.t1; delete dimg.dataset.t2; dimg.onerror=()=>imgFail(dimg); dimg.src=CDN+it.f;dcap.textContent=x.name+' · '+it.label;ddl.href=CDN+it.f;ddl.download=fn;dl.showModal()};
+      f.querySelector('img').onclick=()=>{const tok=(dimg._tok||0)+1; dimg._tok=tok; dimg.onerror=null; dimg.removeAttribute('src'); dimg.src=f.querySelector('img').currentSrc||f.querySelector('img').src; const hi=new Image(); hi.onload=()=>{if(dimg._tok===tok) dimg.src=hi.src}; hi.onerror=()=>{if(dimg._tok!==tok) return; if(!hi.dataset.t){hi.dataset.t=1; hi.src=RAW+it.f}}; hi.src=CDN+it.f;dcap.textContent=x.name+' · '+it.label;ddl.href=CDN+it.f;ddl.download=fn;dl.showModal()};
       gr.append(f)}
     m.append(s);const a=document.createElement('a');a.href='#'+x.slug;a.textContent=x.name;nav.append(a)}
 }
