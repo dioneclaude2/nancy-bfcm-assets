@@ -17,6 +17,7 @@ section.p{padding:28px 0;border-top:1px solid var(--line)}
 .ph{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:16px}
 .ph h3{font:500 24px/1.1 Fraunces,serif;margin:0}.meta{color:var(--mute);font-size:13px}
 .tag{display:inline-block;font-size:12px;padding:2px 9px;border-radius:99px;background:#fff;border:1px solid var(--line);margin-left:6px}
+.note{display:inline-block;margin-top:6px;font-size:12px;font-weight:500;color:#8a5a00;background:#fff4d6;border:1px solid #f0d58a;border-radius:99px;padding:3px 10px}
 .zip{font:500 13px Inter;background:var(--ink);color:#fff;text-decoration:none;padding:9px 16px;border-radius:99px}
 .zip:hover{background:var(--pink)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
@@ -44,7 +45,7 @@ for(const [g,desc] of groups){
   const h=document.createElement('h2');h.textContent=g;m.append(h);const p=document.createElement('p');p.textContent=desc;m.append(p);
   for(const x of D.filter(d=>d.when===g)){
     const s=document.createElement('section');s.className='p';s.id=x.slug;
-    s.innerHTML=`<div class="ph"><div><h3>${x.name}</h3><span class="meta">${x.group}<span class="tag">${x.theme}</span></span></div><a class="zip" href="zip/${x.slug}.zip" download>Download all (${x.items.length})</a></div><div class="grid"></div>`;
+    s.innerHTML=`<div class="ph"><div><h3>${x.name}</h3><span class="meta">${x.group}<span class="tag">${x.theme}</span></span>${x.slug.startsWith("pop-")?'<div><span class="note">⚠ Sizing still being confirmed</span></div>':""}</div><a class="zip" href="zip/${x.slug}.zip" download>Download all (${x.items.length})</a></div><div class="grid"></div>`;
     const gr=s.querySelector('.grid');
     for(const it of x.items){const f=document.createElement('figure');const fn=it.f.split('/').pop();
       f.innerHTML=`<img loading="lazy" src="${it.f}" alt="${x.name}, ${it.label}"><figcaption><span>${it.label}</span><a href="${it.f}" download="${fn}">Download</a></figcaption>`;
