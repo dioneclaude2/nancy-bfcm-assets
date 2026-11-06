@@ -46,7 +46,7 @@ for(const [g,desc] of groups){
   const h=document.createElement('h2');h.textContent=g;m.append(h);const p=document.createElement('p');p.textContent=desc;m.append(p);
   for(const x of D.filter(d=>d.when===g)){
     const s=document.createElement('section');s.className='p';s.id=x.slug;
-    s.innerHTML=`<div class="ph"><div><h3>${x.name}</h3><span class="meta">${x.group}<span class="tag">${x.theme}</span></span>${x.slug.startsWith("pop-")?'<div><span class="note">⚠ Sizing still being confirmed</span></div>':""}</div><a class="zip" href="${CDN}zip/${x.slug}.zip" download>Download all (${x.items.length})</a></div><div class="grid"></div>`;
+    s.innerHTML=`<div class="ph"><div><h3>${x.name}</h3><span class="meta">${x.group}<span class="tag">${x.theme}</span></span>${x.slug.startsWith("pop-")?'<div><span class="note">⚠ Sizing still being confirmed</span></div>':""}</div><a class="zip" href="${CDN}zip/${x.slug}.zip" download="${x.slug}.zip">Download all (${x.items.length})</a></div><div class="grid"></div>`;
     const gr=s.querySelector('.grid');
     for(const it of x.items){const f=document.createElement('figure');const fn=it.f.split('/').pop();
       f.innerHTML=`<img loading="lazy" decoding="async" src="${CDN+(it.t||it.f)}" alt="${x.name}, ${it.label}"><figcaption><span>${it.label}</span><a href="${CDN+it.f}" download="${fn}">Download</a></figcaption>`;
@@ -54,5 +54,7 @@ for(const [g,desc] of groups){
       gr.append(f)}
     m.append(s);const a=document.createElement('a');a.href='#'+x.slug;a.textContent=x.name;nav.append(a)}
 }
+
+document.addEventListener('click',async e=>{const a=e.target.closest('a[download]'); if(!a||!a.href.startsWith(CDN))return; e.preventDefault(); const t=a.textContent; a.textContent='Downloading…'; try{const b=await (await fetch(a.href)).blob(); const u=URL.createObjectURL(b); const l=document.createElement('a'); l.href=u; l.download=a.getAttribute('download')||a.href.split('/').pop(); document.body.appendChild(l); l.click(); l.remove(); setTimeout(()=>URL.revokeObjectURL(u),5000);}catch(err){window.open(a.href,'_blank')} a.textContent=t;});
 dx.onclick=e=>{e.preventDefault();dl.close()};dl.onclick=e=>{if(e.target===dl)dl.close()};
 </script></body></html>
