@@ -21,7 +21,9 @@ section.p{padding:28px 0;border-top:1px solid var(--line)}
 .zip{font:500 13px Inter;background:var(--ink);color:#fff;text-decoration:none;padding:9px 16px;border-radius:99px}
 .zip:hover{background:var(--pink)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
-figure{margin:0;background:var(--card);border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+figure{margin:0;background:var(--card);border-radius:10px;overflow:hidden;border:1px solid var(--line);position:relative}
+.st{position:absolute;top:8px;left:8px;font:500 11px/1 Inter,sans-serif;color:#fff;padding:5px 9px;border-radius:99px;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,.2)}.st.ok{background:#1f9d55}.st.rev{background:#d92d2d}
+.legend{margin-top:14px;font-size:13px;color:var(--mute);display:flex;gap:14px;flex-wrap:wrap}.legend .st{position:static;display:inline-block}
 figure img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;cursor:zoom-in;background:#e4e2e0}
 #drzzl .grid{grid-template-columns:2fr 1fr 1fr;align-items:start}#drzzl figure img{aspect-ratio:auto;object-fit:contain}@media(max-width:600px){#drzzl .grid{grid-template-columns:1fr}}
 figcaption{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;font-size:12px;color:var(--mute);gap:6px}
@@ -34,6 +36,7 @@ footer{max-width:1280px;margin:auto;padding:24px;color:var(--mute);font-size:12p
 </style></head><body>
 <header><h1>BFCM &amp; Christmas <i>assets</i></h1>
 <p class="lead">Eight shots per product: four clean studio shots, two hand shots and two lifestyle shots, themed to when the product launches. Click any image to view it full size. Download a single image or the whole product as a zip.</p></header>
+<div class="legend" style="max-width:1280px;margin:0 auto;padding:0 24px 18px"><span><span class="st ok">Ready</span> approved, use it</span><span><span class="st rev">Still revising</span> draft, will be replaced</span></div>
 <nav><div id="nav"></div></nav><main id="m"></main>
 <dialog id="dl"><img id="dimg" alt=""><div><span id="dcap"></span><span><a id="ddl" download>Download</a> · <a href="#" id="dx">Close</a></span></div></dialog>
 <footer>Nancy · internal + partner asset library · Nov 2026 · DRZZL and Nylon to follow once real product photos are in.</footer>
@@ -51,8 +54,9 @@ for(const [g,desc] of groups){
     s.innerHTML=`<div class="ph"><div><h3>${x.name}</h3><span class="meta">${x.group}<span class="tag">${x.theme}</span></span>${x.slug.startsWith("pop-")?'<div><span class="note">⚠ Sizing still being confirmed</span></div>':""}</div><a class="zip" href="${CDN}zip/${x.slug}.zip" download="${x.slug}.zip">Download all (${x.items.length})</a></div><div class="grid"></div>`;
     const gr=s.querySelector('.grid');
     for(const it of x.items){const f=document.createElement('figure');const fn=it.f.split('/').pop();
-      f.innerHTML=`<img loading="lazy" decoding="async" data-p="${it.t||it.f}" onerror="imgFail(this)" src="${CDN+(it.t||it.f)}" alt="${x.name}, ${it.label}"><figcaption><span>${it.label}</span><a href="${CDN+it.f}" download="${fn}">Download</a></figcaption>`;
-      f.querySelector('img').onclick=()=>{const tok=(dimg._tok||0)+1; dimg._tok=tok; dimg.onerror=null; dimg.removeAttribute('src'); dimg.src=f.querySelector('img').currentSrc||f.querySelector('img').src; const hi=new Image(); hi.onload=()=>{if(dimg._tok===tok) dimg.src=hi.src}; hi.onerror=()=>{if(dimg._tok!==tok) return; if(!hi.dataset.t){hi.dataset.t=1; hi.src=RAW+it.f}}; hi.src=CDN+it.f;dcap.textContent=x.name+' · '+it.label;ddl.href=CDN+it.f;ddl.download=fn;dl.showModal()};
+      const rev=/^(Hand|Lifestyle)/.test(it.label)&&!(x.slug==='12-naughty-nights'&&fn.includes('-05-'));
+      f.innerHTML=`<img loading="lazy" decoding="async" data-p="${it.t||it.f}" onerror="imgFail(this)" src="${CDN+(it.t||it.f)}" alt="${x.name}, ${it.label}"><span class="st ${rev?'rev':'ok'}">${rev?'Still revising':'Ready'}</span><figcaption><span>${it.label}</span><a href="${CDN+it.f}" download="${fn}">Download</a></figcaption>`;
+      f.querySelector('img').onclick=()=>{const tok=(dimg._tok||0)+1; dimg._tok=tok; dimg.onerror=null; dimg.removeAttribute('src'); dimg.src=f.querySelector('img').currentSrc||f.querySelector('img').src; const hi=new Image(); hi.onload=()=>{if(dimg._tok===tok) dimg.src=hi.src}; hi.onerror=()=>{if(dimg._tok!==tok) return; if(!hi.dataset.t){hi.dataset.t=1; hi.src=RAW+it.f}}; hi.src=CDN+it.f;dcap.textContent=x.name+' · '+it.label+(rev?' · STILL REVISING':' · READY');ddl.href=CDN+it.f;ddl.download=fn;dl.showModal()};
       gr.append(f)}
     m.append(s);const a=document.createElement('a');a.href='#'+x.slug;a.textContent=x.name;nav.append(a)}
 }
