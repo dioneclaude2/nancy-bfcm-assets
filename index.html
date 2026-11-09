@@ -49,6 +49,7 @@ const APPROVED=['super-fruitbowl-bag-05-hand.jpg','super-fruitbowl-bag-06-hand.j
 const m=document.getElementById('m'),nav=document.getElementById('nav');
 const groups=[["Nov 21–30 · Black Friday / Cyber Monday","Launching Nov 21 (early access) to Nov 30. All lifestyle shots are snowy Christmas."],["Dec 8–10 · Nylon takeover","Christmas takeover with Nylon: Lem x Nylon and the Pops. Snowy, frosty Christmas lifestyle shots."],["Dec 10 · drzzl launch","Our new lube line: clean product shots of the full range."]];
 for(const [g,desc] of groups){
+  if(!D.some(d=>d.when===g))continue;
   const h=document.createElement('h2');h.textContent=g;m.append(h);const p=document.createElement('p');p.textContent=desc;m.append(p);
   for(const x of D.filter(d=>d.when===g)){
     const s=document.createElement('section');s.className='p';s.id=x.slug;
